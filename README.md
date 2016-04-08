@@ -1,6 +1,8 @@
 # KMCircleView
 A kit for drawing circle with animation.
 
+![Screenshot](https://github.com/Mioke/KMCircleView/blob/master/KMCircleViewDemo/Resources/circleGif.gif)
+
 ## Usage
 
 ### Inialization
@@ -43,3 +45,8 @@ Properties:
     // animation's callback
     self.circle.delegate = self;
 ```
+
+More information please download the demo.
+
+#LICENCE
+All the source code is under the MIT licence. Please see the LICENCE file for details.
