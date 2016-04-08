@@ -18,8 +18,9 @@
 
 @end
 
-@implementation KMCircleView
-
+@implementation KMCircleView {
+    BOOL _containAnimations;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     
@@ -49,6 +50,7 @@
 - (void)stroke {
     
     [self.circleLayer removeFromSuperlayer];
+    [self.gradientLayer removeFromSuperlayer];
     
     CGPoint center = CGPointMake(CGRectGetMidX(self.bounds),CGRectGetMidY(self.bounds));
     
@@ -96,7 +98,10 @@
         self.animationNum = 1;
         [self.circleLayer addAnimation:self.strokeToEnd forKey:@"circleAnimationToEnd"];
         
-    } 
+        if (!self.removeOnCompletion) {
+            _containAnimations = YES;
+        }
+    }
 }
 
 - (void)strokeBack {
@@ -107,6 +112,10 @@
     
     self.animationNum = 2;
     [self.circleLayer addAnimation:self.strokeBackwards forKey:@"circleAnimationBack"];
+    
+    if (!self.removeOnCompletion) {
+        _containAnimations = YES;
+    }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.54 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self cleanSublayers];
@@ -129,6 +138,7 @@
 
 - (void)stop {
     [self.circleLayer removeAllAnimations];
+    _containAnimations = NO;
 }
 
 
@@ -139,6 +149,11 @@
 }
 
 - (void)setPercent:(CGFloat)percent duration:(CGFloat)duration {
+    
+    if (_containAnimations) {
+        [self.circleLayer removeAllAnimations];
+        _containAnimations = NO;
+    }
     
     if (duration == 0) {
         self.circleLayer.strokeEnd = percent / 100.f;
